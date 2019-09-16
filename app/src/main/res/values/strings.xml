@@ -9,4 +9,5 @@
     <!-- Для примера еще несколько ошибок-->
     <string name="err_unauthorized">User is not authorized</string>
     <string name="err_too_many_requests">Too much queries! Try again later</string>
+    <string name="err_empty_list">No data due to your request</string>
 </resources>

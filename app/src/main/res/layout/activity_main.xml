@@ -50,8 +50,8 @@
 
             <include
                 layout="@layout/include_error"
-                android:visibility="@{!viewModel.isLoading() &amp;&amp; viewModel.data.size == 0 &amp;&amp; viewModel.error != null ? View.VISIBLE : View.GONE}"
-                bind:errMsg="@{viewModel.getError()}"
+                android:visibility="@{viewModel.showMessage ? View.VISIBLE : View.GONE}"
+                bind:errMsg="@{viewModel.getError() != null ? viewModel.getError() : @string/err_empty_list}"
                 tools:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

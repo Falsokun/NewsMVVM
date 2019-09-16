@@ -7,4 +7,5 @@
     <string name="err_declined">Отказано в доступе</string>
     <string name="err_unauthorized">Не авторизован</string>
     <string name="err_too_many_requests">Слишком много запросов! Повторите попытку позже</string>
+    <string name="err_empty_list">Нет данных по вашему запросу</string>
 </resources>

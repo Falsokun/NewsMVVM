@@ -30,7 +30,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private DataRepository.Executor<String> onClickListener;
 
     private final int ITEM_VIEW_TYPE_BASIC = 0;
-    @SuppressWarnings("FieldCanBeLocal") private final int ITEM_VIEW_TYPE_FOOTER = 1;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int ITEM_VIEW_TYPE_FOOTER = 1;
 
     public NewsAdapter(@NonNull ArrayList<News> data) {
         this.data = data;
@@ -42,10 +43,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == ITEM_VIEW_TYPE_BASIC) {
             return new NewsHolder(
                     ItemNewsBinding.inflate(LayoutInflater.from(parent.getContext()), parent,
-                                            false));
+                            false));
         } else {
             return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
-                                                  .inflate(R.layout.item_progress, parent, false));
+                    .inflate(R.layout.item_progress, parent, false));
         }
     }
 
@@ -97,7 +98,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.data.clear();
         this.data.addAll(data);
         diffResult.dispatchUpdatesTo(this);
-        enableLoading();
+        if (this.data.size() != 0) {
+            enableLoading();
+        }
     }
 
     public ArrayList<News> getData() {
