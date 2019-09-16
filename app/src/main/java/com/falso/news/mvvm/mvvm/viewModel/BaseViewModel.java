@@ -1,4 +1,4 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.mvvm.viewModel;
 
 import androidx.lifecycle.ViewModel;
 

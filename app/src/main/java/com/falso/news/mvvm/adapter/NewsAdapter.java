@@ -1,6 +1,5 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.adapter;
 
-import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,7 +11,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.falso.news.mvvm.R;
 import com.falso.news.mvvm.databinding.ItemNewsBinding;
+import com.falso.news.mvvm.pojo.News;
 
 import java.util.ArrayList;
 

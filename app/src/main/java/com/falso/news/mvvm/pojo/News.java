@@ -1,4 +1,4 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.pojo;
 
 
 import com.google.gson.annotations.SerializedName;

@@ -84,6 +84,6 @@
 
         <variable
             name="news"
-            type="com.falso.news.mvvm.News" />
+            type="com.falso.news.mvvm.pojo.News" />
     </data>
 </layout>

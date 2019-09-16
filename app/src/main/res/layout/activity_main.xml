@@ -37,6 +37,6 @@
 
         <variable
             name="viewModel"
-            type="com.falso.news.mvvm.MainActivityViewModel" />
+            type="com.falso.news.mvvm.mvvm.viewModel.MainActivityViewModel" />
     </data>
 </layout>

@@ -1,6 +1,10 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.mvvm.viewModel;
 
 import androidx.lifecycle.MutableLiveData;
+
+import com.falso.news.mvvm.Utils;
+import com.falso.news.mvvm.pojo.News;
+import com.falso.news.mvvm.repository.DataRepository;
 
 import java.util.ArrayList;
 

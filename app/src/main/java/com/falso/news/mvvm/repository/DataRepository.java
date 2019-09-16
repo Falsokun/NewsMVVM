@@ -1,4 +1,8 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.repository;
+
+import com.falso.news.mvvm.App;
+import com.falso.news.mvvm.Utils;
+import com.falso.news.mvvm.pojo.News;
 
 import java.util.ArrayList;
 
@@ -7,7 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DataRepository {
 
-    static Disposable getNews(int page, Executor<ArrayList<News>> onDataReceived, Executor<Throwable> onError) {
+    public static Disposable getNews(int page, Executor<ArrayList<News>> onDataReceived, Executor<Throwable> onError) {
         return App.getApi()
                 .newsList(Utils.DEFAULT_TOPIC, Utils.DEFAULT_PAGE_SIZE, page)
                 .subscribeOn(Schedulers.newThread())
@@ -22,7 +26,7 @@ public class DataRepository {
                 });
     }
 
-    interface Executor<T> {
+    public interface Executor<T> {
         void onResult(T resValue);
     }
 

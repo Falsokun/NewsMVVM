@@ -2,6 +2,8 @@ package com.falso.news.mvvm;
 
 import android.app.Application;
 
+import com.falso.news.mvvm.repository.NewsApi;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

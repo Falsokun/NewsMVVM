@@ -1,4 +1,4 @@
-package com.falso.news.mvvm;
+package com.falso.news.mvvm.mvvm.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +15,10 @@ import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.View;
 
+import com.falso.news.mvvm.R;
+import com.falso.news.mvvm.adapter.NewsAdapter;
 import com.falso.news.mvvm.databinding.ActivityMainBinding;
+import com.falso.news.mvvm.mvvm.viewModel.MainActivityViewModel;
 
 import java.util.ArrayList;
 
