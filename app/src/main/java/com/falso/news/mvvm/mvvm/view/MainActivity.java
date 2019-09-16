@@ -6,22 +6,22 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.falso.news.mvvm.R;
 import com.falso.news.mvvm.adapter.NewsAdapter;
-import com.falso.news.mvvm.adapter.NewsAdapterDiffUtil;
 import com.falso.news.mvvm.databinding.ActivityMainBinding;
 import com.falso.news.mvvm.mvvm.viewModel.MainActivityViewModel;
-import com.falso.news.mvvm.pojo.News;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+// actually i think it's better to make a fragment, but there's nothing
+// like this stated in requirement
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mBinding;
@@ -43,17 +43,30 @@ public class MainActivity extends AppCompatActivity {
         initRv();
         initObservers();
         initRefresher();
+        initSearchView();
+    }
+
+    private void initSearchView() {
+        mBinding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mViewModel.onTopicChanged(query);
+                mBinding.search.clearFocus();
+                mAdapter.setData(new ArrayList<>());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     private void initRefresher() {
         mBinding.refresh.setOnRefreshListener(() -> {
+            mBinding.refresh.setRefreshing(false);
             mViewModel.updateData();
-        });
-
-        mViewModel.isLoading().observe(this, value -> {
-            if (mBinding.refresh.isRefreshing()) {
-                mBinding.refresh.setRefreshing(value);
-            }
         });
     }
 
@@ -77,10 +90,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mBinding.newsListRv.setLayoutManager(layoutManager); // default
 
-        mViewModel.getData().observe(this, data -> {
-            mBinding.refresh.setRefreshing(false);
-            mAdapter.setData(data);
-        });
+        mViewModel.getData().observe(this, data -> mAdapter.setData(data));
 
         mBinding.newsListRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -30,7 +30,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private DataRepository.Executor<String> onClickListener;
 
     private final int ITEM_VIEW_TYPE_BASIC = 0;
-    private final int ITEM_VIEW_TYPE_FOOTER = 1;
+    @SuppressWarnings("FieldCanBeLocal") private final int ITEM_VIEW_TYPE_FOOTER = 1;
 
     public NewsAdapter(@NonNull ArrayList<News> data) {
         this.data = data;
@@ -44,8 +44,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ItemNewsBinding.inflate(LayoutInflater.from(parent.getContext()), parent,
                                             false));
         } else {
-            return new ProgressViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress, parent, false));
+            return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
+                                                  .inflate(R.layout.item_progress, parent, false));
         }
     }
 
@@ -53,7 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder vholder, int position) {
         if (getItemViewType(vholder.getAdapterPosition()) == ITEM_VIEW_TYPE_BASIC) {
             News news = data.get(vholder.getLayoutPosition());
-            NewsHolder holder = (NewsHolder)vholder;
+            NewsHolder holder = (NewsHolder) vholder;
             holder.binding.setNews(news);
             RequestOptions requestOptions = new RequestOptions();
             requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
@@ -134,9 +134,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
 
-        public ProgressBar progressBar;
+        ProgressBar progressBar;
 
-        public ProgressViewHolder(View v) {
+        ProgressViewHolder(View v) {
             super(v);
             progressBar = v.findViewById(R.id.progress);
         }

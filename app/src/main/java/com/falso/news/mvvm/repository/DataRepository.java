@@ -11,9 +11,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DataRepository {
 
-    public static Disposable getNews(int page, Executor<ArrayList<News>> onDataReceived, Executor<Throwable> onError) {
+    public static Disposable getNews(int page, String query,
+                                     Executor<ArrayList<News>> onDataReceived,
+                                     Executor<Throwable> onError) {
         return App.getApi()
-                .newsList(Utils.DEFAULT_TOPIC, Utils.DEFAULT_PAGE_SIZE, page)
+                .newsList(query, Utils.DEFAULT_PAGE_SIZE, page)
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(x -> {
                     if (onDataReceived != null) {

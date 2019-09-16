@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Введите запрос</string>
+
+    <string name="err_no_internet">Проверьте соединение и повторите попытку!</string>
+    <string name="err">Ошибка!</string>
+    <string name="err_declined">Отказано в доступе</string>
+    <string name="err_unauthorized">Не авторизован</string>
+    <string name="err_too_many_requests">Слишком много запросов! Повторите попытку позже</string>
+</resources>

@@ -19,14 +19,11 @@ public class News {
 
     private String url;
 
-    @SerializedName(value = "urlToImage")
-    private String imgUrl;
+    @SerializedName(value = "urlToImage") private String imgUrl;
 
-    @SerializedName(value = "publishedAt")
-    private String date;
+    @SerializedName(value = "publishedAt") private String date;
 
-    @Expose
-    private boolean isExpanded;
+    @Expose private boolean isExpanded;
 
     public String getAuthor() {
         return author;
@@ -86,10 +83,12 @@ public class News {
 
     public String getSimpleDate() {
         try {
-            Date incomingDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(date);
+            Date incomingDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(
+                    date);
             return new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.US).format(incomingDate);
         } catch (ParseException e) {
             return "";
         }
     }
+
 }

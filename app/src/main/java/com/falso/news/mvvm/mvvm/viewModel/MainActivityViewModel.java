@@ -2,34 +2,43 @@ package com.falso.news.mvvm.mvvm.viewModel;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.falso.news.mvvm.R;
 import com.falso.news.mvvm.Utils;
 import com.falso.news.mvvm.pojo.News;
 import com.falso.news.mvvm.repository.DataRepository;
 
 import java.util.ArrayList;
 
+import io.reactivex.subjects.BehaviorSubject;
+
 public class MainActivityViewModel extends BaseViewModel {
 
-    private MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<String> error = new MutableLiveData<>();
 
-    private MutableLiveData<ArrayList<News>> data = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<News>> data = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
+    private final BehaviorSubject<String> query = BehaviorSubject.createDefault(
+            Utils.DEFAULT_TOPIC);
 
     public MainActivityViewModel() {
         isLoading.setValue(true);
+
+        disposable.add(query.subscribe(newQuery -> initData(),
+                                       ignored -> error.postValue(Utils.getString(R.string.err))));
+
         initData();
     }
 
     private void initData() {
-        disposable.add(DataRepository.getNews(Utils.DEFAULT_PAGE, newsData -> {
-                    data.postValue(newsData);
-                    isLoading.postValue(false);
-                },
-                throwable -> {
-                    isLoading.postValue(false);
-                    error.postValue(throwable.getMessage());
-                }));
+        disposable.add(DataRepository.getNews(Utils.DEFAULT_PAGE, query.getValue(), newsData -> {
+            data.postValue(newsData);
+            isLoading.postValue(false);
+        }, throwable -> {
+            isLoading.postValue(false);
+            error.postValue(Utils.getString(parseError(throwable)));
+        }));
     }
 
     public MutableLiveData<String> getError() {
@@ -55,25 +64,27 @@ public class MainActivityViewModel extends BaseViewModel {
         }
 
         int currentPage = data.getValue().size() / Utils.DEFAULT_PAGE_SIZE;
-        disposable.add(DataRepository.getNews(currentPage + 1, newsData -> {
-                    ArrayList<News> temp = data.getValue();
-                    if (temp != null) {
-                        temp.addAll(newsData);
-                    } else {
-                        temp = newsData; // not possible
-                    }
+        disposable.add(DataRepository.getNews(currentPage + 1, query.getValue(), newsData -> {
+            ArrayList<News> temp = data.getValue();
+            if (temp != null) {
+                temp.addAll(newsData);
+            } else {
+                temp = newsData; // not possible
+            }
 
-                    data.postValue(temp);
-                    isLoading.postValue(false);
-                },
-                throwable -> {
-                    isLoading.postValue(false);
-                    error.postValue(throwable.getMessage());
-                }));
+            data.postValue(temp);
+            isLoading.postValue(false);
+        }, throwable -> {
+            isLoading.postValue(false);
+            error.postValue(Utils.getString(parseError(throwable)));
+        }));
     }
 
     public void updateData() {
         initData();
     }
 
+    public void onTopicChanged(String query) {
+        this.query.onNext(query);
+    }
 }

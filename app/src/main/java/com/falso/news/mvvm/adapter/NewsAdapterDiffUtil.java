@@ -12,7 +12,7 @@ public class NewsAdapterDiffUtil extends DiffUtil.Callback {
     private ArrayList<News> oldData;
     private ArrayList<News> newData;
 
-    public NewsAdapterDiffUtil(ArrayList<News> oldData, ArrayList<News> newData) {
+    NewsAdapterDiffUtil(ArrayList<News> oldData, ArrayList<News> newData) {
         this.oldData = oldData;
         this.newData = newData;
     }

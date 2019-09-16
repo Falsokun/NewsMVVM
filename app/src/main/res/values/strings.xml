@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">News.MVVM</string>
+    <string name="app_name" translatable="false">News.MVVM</string>
+
+    <string name="search_hint">Enter your query</string>
+
+    <string name="err_no_internet">Please, check your internet connection and retry</string>
+    <string name="err">Error!</string>
+    <string name="err_declined">Access denied</string>
+    <!-- Для примера еще несколько ошибок-->
+    <string name="err_unauthorized">User is not authorized</string>
+    <string name="err_too_many_requests">Too much queries! Try again later</string>
 </resources>
