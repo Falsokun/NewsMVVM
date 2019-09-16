@@ -1,9 +1,12 @@
 package com.falso.news.mvvm.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -14,12 +17,20 @@ import com.bumptech.glide.request.RequestOptions;
 import com.falso.news.mvvm.R;
 import com.falso.news.mvvm.databinding.ItemNewsBinding;
 import com.falso.news.mvvm.pojo.News;
+import com.falso.news.mvvm.repository.DataRepository;
 
 import java.util.ArrayList;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<News> data;
+
+    private boolean isLastLoadingItem = true;
+
+    private DataRepository.Executor<String> onClickListener;
+
+    private final int ITEM_VIEW_TYPE_BASIC = 0;
+    private final int ITEM_VIEW_TYPE_FOOTER = 1;
 
     public NewsAdapter(@NonNull ArrayList<News> data) {
         this.data = data;
@@ -27,53 +38,107 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
     @NonNull
     @Override
-    public NewsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NewsHolder(ItemNewsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
-        News news = data.get(holder.getLayoutPosition());
-        holder.binding.setNews(news);
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
-        Glide.with(holder.binding.getRoot().getContext())
-                .load(news.getImgUrl())
-                .apply(requestOptions)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .error(R.mipmap.ic_launcher)
-                .into(holder.binding.img);
-
-        if (holder.expanded) {
-            holder.binding.description.setMaxLines(Integer.MAX_VALUE);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == ITEM_VIEW_TYPE_BASIC) {
+            return new NewsHolder(
+                    ItemNewsBinding.inflate(LayoutInflater.from(parent.getContext()), parent,
+                                            false));
         } else {
-            holder.binding.description.setMaxLines(2);
+            return new ProgressViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress, parent, false));
         }
     }
 
     @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder vholder, int position) {
+        if (getItemViewType(vholder.getAdapterPosition()) == ITEM_VIEW_TYPE_BASIC) {
+            News news = data.get(vholder.getLayoutPosition());
+            NewsHolder holder = (NewsHolder)vholder;
+            holder.binding.setNews(news);
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
+            Glide.with(holder.binding.getRoot().getContext())
+                    .load(news.getImgUrl())
+                    .apply(requestOptions)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_image_broken)
+                    .placeholder(R.drawable.ic_image_loading)
+                    .into(holder.binding.img);
+
+            holder.itemView.setOnClickListener(v -> {
+                boolean expanded = news.isExpanded();
+                news.setExpanded(!expanded);
+                notifyItemChanged(position);
+            });
+
+            holder.binding.link.setOnClickListener(v -> {
+                if (onClickListener != null) {
+                    onClickListener.onResult(news.getUrl());
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return !isLastLoadingItem || position < data.size() ? ITEM_VIEW_TYPE_BASIC : ITEM_VIEW_TYPE_FOOTER;
+    }
+
+    @Override
     public int getItemCount() {
-        return data.size();
+        return isLastLoadingItem ? data.size() + 1 : data.size();
     }
 
     public void setData(ArrayList<News> data) {
+        disableLoading();
+        ArrayList<News> tempData = getData();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new NewsAdapterDiffUtil(tempData, data));
         this.data.clear();
         this.data.addAll(data);
+        diffResult.dispatchUpdatesTo(this);
+        enableLoading();
+    }
+
+    public ArrayList<News> getData() {
+        return data;
+    }
+
+    public void setOnClickListener(DataRepository.Executor<String> onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public void disableLoading() {
+        if (isLastLoadingItem) {
+            isLastLoadingItem = false;
+            notifyItemRemoved(data.size() + 1);
+        }
+    }
+
+    private void enableLoading() {
+        if (!isLastLoadingItem) {
+            isLastLoadingItem = true;
+            notifyItemInserted(data.size() + 1);
+        }
     }
 
     class NewsHolder extends RecyclerView.ViewHolder {
 
         ItemNewsBinding binding;
 
-        boolean expanded = false;
-
         NewsHolder(@NonNull ItemNewsBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+        }
+    }
 
-            this.binding.getRoot().setOnClickListener(v -> {
-                expanded = !expanded;
-            });
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = v.findViewById(R.id.progress);
         }
     }
 }

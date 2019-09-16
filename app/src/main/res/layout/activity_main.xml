@@ -4,32 +4,48 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <ProgressBar
-            android:id="@+id/rv_progress"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/news_list_rv" />
+            android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/news_list_rv"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:scrollbars="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/rv_progress"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/news_list_rv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appbar"
+                tools:listitem="@layout/item_news" />
 
-        <include
-            layout="@layout/include_error"
-            android:visibility="@{viewModel.error == null ? View.GONE : View.VISIBLE}"
-            bind:errMsg="@{viewModel.getError()}"
-            tools:visibility="gone" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/app_name"
+                    app:titleTextColor="@color/colorPrimaryDark" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <include
+                layout="@layout/include_error"
+                android:visibility="@{!viewModel.isLoading() &amp;&amp; viewModel.data.size == 0 &amp;&amp; viewModel.error != null ? View.VISIBLE : View.GONE}"
+                bind:errMsg="@{viewModel.getError()}"
+                tools:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <data>
 

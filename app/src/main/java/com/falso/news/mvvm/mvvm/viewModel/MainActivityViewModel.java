@@ -45,6 +45,10 @@ public class MainActivityViewModel extends BaseViewModel {
     }
 
     public void loadMore() {
+        if (isLoading.getValue() != null && isLoading.getValue()) {
+            return;
+        }
+
         isLoading.postValue(true);
         if (data.getValue() == null) {
             return;
@@ -66,6 +70,10 @@ public class MainActivityViewModel extends BaseViewModel {
                     isLoading.postValue(false);
                     error.postValue(throwable.getMessage());
                 }));
+    }
+
+    public void updateData() {
+        initData();
     }
 
 }

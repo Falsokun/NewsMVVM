@@ -1,6 +1,7 @@
 package com.falso.news.mvvm.pojo;
 
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
@@ -23,6 +24,9 @@ public class News {
 
     @SerializedName(value = "publishedAt")
     private String date;
+
+    @Expose
+    private boolean isExpanded;
 
     public String getAuthor() {
         return author;
@@ -72,10 +76,18 @@ public class News {
         this.date = date;
     }
 
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
     public String getSimpleDate() {
         try {
             Date incomingDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(date);
-            return new SimpleDateFormat("yyyy-mm-dd hh:mm", Locale.US).format(incomingDate);
+            return new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.US).format(incomingDate);
         } catch (ParseException e) {
             return "";
         }

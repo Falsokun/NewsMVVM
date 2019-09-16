@@ -14,5 +14,4 @@ public interface NewsApi {
     Observable<NewsContainer> newsList(@Query("q") String topic, @Query("pageSize") int pageSize,
                                        @Query("page") int page);
 
-
 }
