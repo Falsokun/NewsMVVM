@@ -3,6 +3,7 @@ package com.falso.news.mvvm.mvvm.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSearchView() {
+        mBinding.search.setFocusable(false);
+        mBinding.search.setIconified(false);
+        mBinding.search.clearFocus();
         mBinding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

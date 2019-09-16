@@ -5,7 +5,7 @@
     <color name="colorAccent">#D84315</color>
 
     <color name="gradientStart">@color/colorPrimary</color>
-    <color name="gradientEnd">#ebedee</color>
+    <color name="gradientEnd">#E3E6E6</color>
 
     <color name="item_divider">#e1e1e1</color>
 </resources>
